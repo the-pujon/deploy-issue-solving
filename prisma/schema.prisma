@@ -15,14 +15,14 @@ datasource db {
   url      = "mongodb+srv://erazul89:XQ2jWRRdFYEZMLAN@taosif.sxba9qz.mongodb.net/database?retryWrites=true&w=majority&appName=Taosif"
 }
 
-
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  email    String    @unique
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  email    String   @unique
   password String
   name     String
-  role     String    @default("Member")
+  role     UserRole @default(MEMBER)
   messages Message[]
+  userGroups UserGroup[]
 }
 
 model Message {
@@ -32,13 +32,24 @@ model Message {
   userId    String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
-  Group     Group    @relation(fields: [groupId], references: [id])
+  group     Group    @relation(fields: [groupId], references: [id])
 }
 
 model Group {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String    @unique
-  messages Message[]
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createdBy String  
+  messages  Message[]
+  userGroups UserGroup[]
+}
+
+model UserGroup {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String
+  groupId  String
+  user     User   @relation(fields: [userId], references: [id])
+  group    Group  @relation(fields: [groupId], references: [id])
+  @@unique([userId, groupId]) 
 }
 
 enum UserRole {
