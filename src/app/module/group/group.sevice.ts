@@ -1,4 +1,4 @@
-import { PrismaClient, Group,GroupType } from "@prisma/client";
+import { PrismaClient, Group, GroupType } from "@prisma/client";
 import config from "../../config";
 import jwt from 'jsonwebtoken'
 import AppError from "../../errors/AppError";
@@ -39,7 +39,7 @@ const createGroup = async (name: string, createdBy: string, type: string, token:
     const GroupData = {
         createdBy,
         name,
-        type : type as GroupType
+        type: type as GroupType
     }
 
     const result = await prisma.group.create({
@@ -50,7 +50,7 @@ const createGroup = async (name: string, createdBy: string, type: string, token:
 
 };
 
-const joinGroup = async (userId:string,groupId:string,token:string) => {
+const joinGroup = async (userId: string, groupId: string, token: string) => {
     const decoded = jwt.verify(token, config.jwtAccessSecret as string)
     if (!decoded) {
         throw new Error('Invalid token');
@@ -61,12 +61,12 @@ const joinGroup = async (userId:string,groupId:string,token:string) => {
     }
 
     const group = await prisma.group.findUnique({
-        where : {
-            id : groupId
+        where: {
+            id: groupId
         }
     })
 
-    if(!group){
+    if (!group) {
         throw new AppError(404, "Group not found");
     }
 
@@ -75,9 +75,9 @@ const joinGroup = async (userId:string,groupId:string,token:string) => {
     }
 
     const userGroup = await prisma.userGroup.findFirst({
-        where : {
-            userId : userId,
-            groupId : groupId
+        where: {
+            userId: userId,
+            groupId: groupId
         }
     })
 
@@ -86,7 +86,7 @@ const joinGroup = async (userId:string,groupId:string,token:string) => {
     }
 
     const newUserGroup = await prisma.userGroup.create({
-        data : {
+        data: {
             userId,
             groupId
         }
@@ -95,7 +95,34 @@ const joinGroup = async (userId:string,groupId:string,token:string) => {
     return newUserGroup
 }
 
+const viewGroup = async (groupId: string) => {
+    try {
+        const group = await prisma.group.findMany({
+            where: {
+                id: groupId
+            },
+            include: {
+                userGroups: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        })
+
+        if (!group) {
+            throw new Error('Group not found');
+        }
+
+        return group
+
+    } catch (er) {
+
+    }
+}
+
 export const groupService = {
     createGroup,
-    joinGroup
+    joinGroup,
+    viewGroup
 }

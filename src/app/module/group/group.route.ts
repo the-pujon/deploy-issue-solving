@@ -14,5 +14,9 @@ router.post(
     // validateRequest(groupValidation.createGroupValidation),
     groupController.joinGroup
 );
+router.get(
+    '/see-group/:groupId',
+    groupController.viewGroup
+);
 
 export const groupRoute = router

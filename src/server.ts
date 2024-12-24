@@ -6,16 +6,14 @@ import { Server as SocketIOServer } from 'socket.io';
 
 const prisma = new PrismaClient();
 
+const server = new Server(app);
+const io = new SocketIOServer(server);
+
+export { io };
+
 async function main() {
     try {
-        await prisma.$connect();
-        const server = new Server(app)
-        const io = new SocketIOServer(server, {
-            cors: {
-                origin: "*",
-                methods: ["GET", "POST"]
-            }
-        });
+        await prisma.$connect();       
 
         io.on('connection', (socket) => {
             console.log('A user connected:', socket.id);
