@@ -16,12 +16,12 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  email    String   @unique
-  password String
-  name     String
-  role     UserRole @default(MEMBER)
-  messages Message[]
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  email      String      @unique
+  password   String
+  name       String
+  role       UserRole    @default(MEMBER)
+  messages   Message[]
   userGroups UserGroup[]
 }
 
@@ -36,23 +36,30 @@ model Message {
 }
 
 model Group {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  createdBy String  
-  messages  Message[]
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  name       String      @unique
+  type       GroupType   @default(GENERAL_CHAT) 
+  createdBy  String
+  messages   Message[]
   userGroups UserGroup[]
 }
 
 model UserGroup {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String
-  groupId  String
-  user     User   @relation(fields: [userId], references: [id])
-  group    Group  @relation(fields: [groupId], references: [id])
-  @@unique([userId, groupId]) 
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String
+  groupId String
+  user    User   @relation(fields: [userId], references: [id])
+  group   Group  @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
 }
 
 enum UserRole {
   ADMIN
   MEMBER
+}
+
+enum GroupType {
+  ADMIN_CHAT
+  GENERAL_CHAT
 }
