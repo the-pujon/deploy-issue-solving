@@ -7,9 +7,6 @@ const createGroupValidation = z.object({
     type: z.string({
         required_error: "Group Type is required"
     }),
-    createdBy: z.string({
-        required_error: "createdBy is required"
-    }),
 
 });
 

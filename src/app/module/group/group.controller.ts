@@ -7,10 +7,12 @@ import { groupService } from "./group.sevice"
 const groupCreation = catchAsync(async (req: Request, res: Response) => {
 
     const token = req.headers.authorization?.split(" ")[1]
- 
-    const { name, createdBy } = req.body
 
-    const result = await groupService.createGroup(name,createdBy,token as string)
+    const { name, type } = req.body
+    const { createdBy } = req.params
+
+
+    const result = await groupService.createGroup(name, createdBy, type, token as string)
     sendResponse(res, {
         statusCode: 201,
         success: true,
@@ -21,5 +23,5 @@ const groupCreation = catchAsync(async (req: Request, res: Response) => {
 
 
 export const groupController = {
-    groupCreation  
+    groupCreation
 }
