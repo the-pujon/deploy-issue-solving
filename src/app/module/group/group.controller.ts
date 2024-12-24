@@ -54,6 +54,18 @@ const viewGroup = catchAsync(async (req: Request, res: Response) => {
         data: result
     })
 })
+const viewAllGroup = catchAsync(async (req: Request, res: Response) => {
+
+
+    const result = await groupService.viewAllGroups()
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'All groups retrived Successfully',
+        data: result
+    })
+})
 
 
 
@@ -61,5 +73,6 @@ const viewGroup = catchAsync(async (req: Request, res: Response) => {
 export const groupController = {
     groupCreation,
     joinGroup,
-    viewGroup
+    viewGroup,
+    viewAllGroup
 }

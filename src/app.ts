@@ -5,7 +5,7 @@ import router from './app/routes';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 
 const corsOptions = {
-    origin: ['http://localhost:5173',],
+    origin: ['http://localhost:3000',],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 
 app.get('/', (req: Request, res: Response) => {

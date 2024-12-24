@@ -15,8 +15,6 @@ const createUser = async (req: Request): Promise<User> => {
         name: req.body.name
     }
 
-    console.log(userData)
-
     const result = await prisma.user.create({
         data: userData
     })

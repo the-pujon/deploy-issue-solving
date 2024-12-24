@@ -18,5 +18,9 @@ router.get(
     '/see-group/:groupId',
     groupController.viewGroup
 );
+router.get(
+    '/see-group',
+    groupController.viewAllGroup
+);
 
 export const groupRoute = router

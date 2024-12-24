@@ -121,8 +121,34 @@ const viewGroup = async (groupId: string) => {
     }
 }
 
+const viewAllGroups = async () => {
+    try {
+        const groups = await prisma.group.findMany({
+            include: {
+                userGroups: {
+                    include: {
+                        user: true,
+                    },
+                },
+            },
+        });
+
+        if (!groups || groups.length === 0) {
+            throw new Error('No groups found');
+        }
+
+        return groups;
+
+    } catch (error) {
+        console.error('Error fetching groups:', error);
+        throw new Error('Failed to retrieve groups');
+    }
+};
+
+
 export const groupService = {
     createGroup,
     joinGroup,
-    viewGroup
+    viewGroup,
+    viewAllGroups
 }

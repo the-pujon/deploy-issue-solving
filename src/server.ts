@@ -1,4 +1,4 @@
-import { Server } from 'http';
+import { createServer } from 'http';
 import app from './app';
 import config from './app/config';
 import { PrismaClient } from '@prisma/client';
@@ -6,32 +6,36 @@ import { Server as SocketIOServer } from 'socket.io';
 
 const prisma = new PrismaClient();
 
-const server = new Server(app);
-const io = new SocketIOServer(server);
+const server = createServer(app);
+const io = new SocketIOServer(server,{
+    cors: {
+      origin: ["http://localhost:3000"] ,  
+      methods: ["GET", "POST"],
+      credentials: true,  
+    },
+  });
 
 export { io };
 
 async function main() {
     try {
-        await prisma.$connect();       
+        await prisma.$connect();    
+        console.log('Connected to database')   
 
         io.on('connection', (socket) => {
+            console.log(socket.id)
             console.log('A user connected:', socket.id);
-
-            // Example: Listen for a custom event
             socket.on('message', (data) => {
                 console.log('Message received:', data);
-                // Broadcast the message to all connected clients
                 io.emit('message', data);
             });
 
-            // Handle disconnection
             socket.on('disconnect', () => {
                 console.log('A user disconnected');
             });
         });
 
-        app.listen(config.port, () => {
+        server.listen(config.port, () => {
             console.log(`Example app listening on port ${config.port}`);
         });
     } catch (err) {
