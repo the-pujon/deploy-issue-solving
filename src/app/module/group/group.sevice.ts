@@ -42,8 +42,6 @@ const createGroup = async (name: string, createdBy: string, type: string, token:
         type : type as GroupType
     }
 
-    console.log(GroupData)
-
     const result = await prisma.group.create({
         data: GroupData
     })
@@ -52,6 +50,52 @@ const createGroup = async (name: string, createdBy: string, type: string, token:
 
 };
 
+const joinGroup = async (userId:string,groupId:string,token:string) => {
+    const decoded = jwt.verify(token, config.jwtAccessSecret as string)
+    if (!decoded) {
+        throw new Error('Invalid token');
+    }
+
+    if (typeof decoded === 'string' || !('email' in decoded)) {
+        throw new Error('Invalid token structure');
+    }
+
+    const group = await prisma.group.findUnique({
+        where : {
+            id : groupId
+        }
+    })
+
+    if(!group){
+        throw new AppError(404, "Group not found");
+    }
+
+    if (group.type !== GroupType.ADMIN_CHAT && decoded.role !== "ADMIN") {
+        throw new AppError(400, "Invalid group type. Must be either GENERAL_CHAT or ADMIN_CHAT.");
+    }
+
+    const userGroup = await prisma.userGroup.findFirst({
+        where : {
+            userId : userId,
+            groupId : groupId
+        }
+    })
+
+    if (userGroup) {
+        throw new AppError(400, "You are already a member of this group");
+    }
+
+    const newUserGroup = await prisma.userGroup.create({
+        data : {
+            userId,
+            groupId
+        }
+    })
+
+    return newUserGroup
+}
+
 export const groupService = {
-    createGroup
+    createGroup,
+    joinGroup
 }

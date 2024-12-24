@@ -21,7 +21,26 @@ const groupCreation = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const joinGroup = catchAsync(async (req: Request, res: Response) => {
+
+    const token = req.headers.authorization?.split(" ")[1]
+
+    const { userId,groupId } = req.params
+
+
+    const result = await groupService.joinGroup(userId,groupId,token as string)
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'Join Group Successfully',
+        data: result
+    })
+})
+
+
+
 
 export const groupController = {
-    groupCreation
+    groupCreation,
+    joinGroup
 }
