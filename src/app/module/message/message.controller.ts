@@ -9,7 +9,7 @@ const sentMessage = catchAsync(async (req: Request, res: Response) => {
     const { groupId, userId } = req.params; 
     const { content } = req.body;
     const result = await messageService.sendMessage(content,groupId,userId)
-    io.to(groupId).emit('new_message', { message: result, groupId });
+    io.emit('receiveMessage', content)
     sendResponse(res, {
         statusCode: 201,
         success: true,

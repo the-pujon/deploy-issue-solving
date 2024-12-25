@@ -25,11 +25,9 @@ async function main() {
         io.on('connection', (socket) => {
             console.log(socket.id)
             console.log('A user connected:', socket.id);
-            socket.on('message', (data) => {
-                console.log('Message received:', data);
-                io.emit('message', data);
+            socket.on('sendMessage', (data) => {
+                io.emit('receiveMessage', data);
             });
-
             socket.on('disconnect', () => {
                 console.log('A user disconnected');
             });

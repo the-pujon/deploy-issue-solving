@@ -68,8 +68,6 @@ const viewAllGroup = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-
-
 export const groupController = {
     groupCreation,
     joinGroup,

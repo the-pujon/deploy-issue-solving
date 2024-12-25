@@ -70,8 +70,8 @@ const joinGroup = async (userId: string, groupId: string, token: string) => {
         throw new AppError(404, "Group not found");
     }
 
-    if (group.type !== GroupType.ADMIN_CHAT && decoded.role !== "ADMIN") {
-        throw new AppError(400, "Invalid group type. Must be either GENERAL_CHAT or ADMIN_CHAT.");
+    if (group.type == GroupType.ADMIN_CHAT && decoded.role !== "ADMIN") {
+        throw new AppError(400, "You can not join the group");
     }
 
     const userGroup = await prisma.userGroup.findFirst({
