@@ -9,8 +9,9 @@ const signUpRegistration = catchAsync(async (req: Request, res: Response) => {
     const result = await userService.createUser(req)
     
 
+
     const x = io.emit("signup", { success: true, message: "User registered successfully", data: result });
-    console.log(x)
+ 
 
     sendResponse(res, {
         statusCode: 201,

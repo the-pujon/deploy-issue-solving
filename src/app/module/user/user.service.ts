@@ -7,6 +7,7 @@ const prisma = new PrismaClient()
 
 const createUser = async (req: Request): Promise<User> => {
 
+
     const hashedPassword: string = await bcrypt.hash(req.body.password, 6)
 
     const userData = {

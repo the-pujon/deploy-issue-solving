@@ -1,17 +1,18 @@
 import express from 'express'
 import { groupController } from './group.controller';
+import validateRequest from '../../middleware/validateRequest';
+import { groupValidation } from './group.validation';
 
 
 const router = express.Router();
 
 router.post(
     '/create-group/:createdBy',
-    // validateRequest(groupValidation.createGroupValidation),
+    validateRequest(groupValidation.createGroupValidation),
     groupController.groupCreation
 );
 router.post(
     '/join-group/:userId/:groupId',
-    // validateRequest(groupValidation.createGroupValidation),
     groupController.joinGroup
 );
 router.get(

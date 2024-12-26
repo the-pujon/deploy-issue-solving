@@ -16,8 +16,6 @@ const loginUser = async (payload: {
         }
     });
 
-    console.log(userData)
-
     const isCorrectPassword: boolean = await bcrypt.compare(payload.password, userData.password);
 
     if (!isCorrectPassword) {
