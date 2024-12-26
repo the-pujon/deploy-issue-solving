@@ -2,10 +2,10 @@
   "name": "backdend",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "prisma generate && tsc",
+    "build": "npx prisma generate && tsc && cp index.js dist/",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "postinstall": "prisma generate"
   },
@@ -37,6 +37,6 @@
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": "18.x"
   }
 }
