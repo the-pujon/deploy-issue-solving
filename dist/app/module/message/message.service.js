@@ -15,13 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageService = void 0;
 const client_1 = require("@prisma/client");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
+const config_1 = __importDefault(require("../../config"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma = new client_1.PrismaClient();
-const sendMessage = (content, groupId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+const sendMessage = (content, groupId, userId, token) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwtAccessSecret);
+        if (!decoded) {
+            throw new Error('Invalid token');
+        }
+        if (typeof decoded === 'string' || !('email' in decoded)) {
+            throw new Error('Invalid token structure');
+        }
+        const userName = decoded === null || decoded === void 0 ? void 0 : decoded.name;
         const userGroup = yield prisma.userGroup.findFirst({
             where: {
                 userId: userId,
-                groupId: groupId
+                groupId: groupId,
             }
         });
         if (!userGroup) {
@@ -31,7 +41,8 @@ const sendMessage = (content, groupId, userId) => __awaiter(void 0, void 0, void
             data: {
                 content,
                 groupId,
-                userId
+                userId,
+                userName
             },
         });
         return message;

@@ -18,9 +18,11 @@ const SendResponse_1 = __importDefault(require("../../utils/SendResponse"));
 const message_service_1 = require("./message.service");
 const server_1 = require("../../../server");
 const sentMessage = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { groupId, userId } = req.params;
     const { content } = req.body;
-    const result = yield message_service_1.messageService.sendMessage(content, groupId, userId);
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const result = yield message_service_1.messageService.sendMessage(content, groupId, userId, token);
     server_1.io.emit('receiveMessage', content);
     (0, SendResponse_1.default)(res, {
         statusCode: 201,

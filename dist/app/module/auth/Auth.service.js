@@ -57,7 +57,6 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             email: payload.email,
         }
     });
-    console.log(userData);
     const isCorrectPassword = yield bcrypt.compare(payload.password, userData.password);
     if (!isCorrectPassword) {
         throw new Error("Password incorrect!");
