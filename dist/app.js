@@ -9,7 +9,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const routes_1 = __importDefault(require("./app/routes"));
 const globalErrorHandler_1 = __importDefault(require("./app/middleware/globalErrorHandler"));
 const corsOptions = {
-    origin: ['http://localhost:3000',],
+    origin: ['http://localhost:3000', "https://the-messenger-production.up.railway.app"],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'

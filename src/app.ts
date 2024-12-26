@@ -5,7 +5,7 @@ import router from './app/routes';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 
 const corsOptions = {
-    origin: ['http://localhost:3000',],
+    origin: ['http://localhost:3000',"https://the-messenger-production.up.railway.app"],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
