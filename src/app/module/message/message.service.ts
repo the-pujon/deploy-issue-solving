@@ -1,17 +1,30 @@
 import { PrismaClient } from '@prisma/client';
-import { TMessage } from './message.interface';
 import AppError from '../../errors/AppError';
+import config from '../../config';
+import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient();
 
 
-const sendMessage = async (content: string, groupId: string, userId: string) => {
+const sendMessage = async (content: string, groupId: string, userId: string,token: string) => {
     try {
+        const decoded = jwt.verify(token, config.jwtAccessSecret as string)
 
+        if (!decoded) {
+            throw new Error('Invalid token');
+        }
+
+        if (typeof decoded === 'string' || !('email' in decoded)) {
+            throw new Error('Invalid token structure');
+        }
+
+        const userName = decoded?.name
+        
         const userGroup = await prisma.userGroup.findFirst({
             where: {
                 userId: userId,
-                groupId: groupId
+                groupId: groupId,
+                
             }
         });
         if (!userGroup) {
@@ -22,7 +35,8 @@ const sendMessage = async (content: string, groupId: string, userId: string) => 
             data: {
                 content,
                 groupId,
-                userId
+                userId,
+                userName
             },
         });
         return message;

@@ -53,7 +53,6 @@ const createUser = (req) => __awaiter(void 0, void 0, void 0, function* () {
         password: hashedPassword,
         name: req.body.name
     };
-    console.log(userData);
     const result = yield prisma.user.create({
         data: userData
     });

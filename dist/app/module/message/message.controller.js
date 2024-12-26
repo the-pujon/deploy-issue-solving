@@ -21,7 +21,7 @@ const sentMessage = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     const { groupId, userId } = req.params;
     const { content } = req.body;
     const result = yield message_service_1.messageService.sendMessage(content, groupId, userId);
-    server_1.io.to(groupId).emit('new_message', { message: result, groupId });
+    server_1.io.emit('receiveMessage', content);
     (0, SendResponse_1.default)(res, {
         statusCode: 201,
         success: true,

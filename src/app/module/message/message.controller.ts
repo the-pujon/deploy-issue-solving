@@ -6,9 +6,10 @@ import { io } from "../../../server"
 
 
 const sentMessage = catchAsync(async (req: Request, res: Response) => {
-    const { groupId, userId } = req.params; 
+    const { groupId, userId } = req.params;
     const { content } = req.body;
-    const result = await messageService.sendMessage(content,groupId,userId)
+    const token = req.headers.authorization?.split(" ")[1]
+    const result = await messageService.sendMessage(content, groupId, userId, token as string)
     io.emit('receiveMessage', content)
     sendResponse(res, {
         statusCode: 201,
@@ -17,10 +18,15 @@ const sentMessage = catchAsync(async (req: Request, res: Response) => {
         data: result
     })
 })
+
+
+
 const viewMessage = catchAsync(async (req: Request, res: Response) => {
-    const { groupId } = req.params; 
-  
+    const { groupId } = req.params;
+
+
     const result = await messageService.viewMessage(groupId)
+
     sendResponse(res, {
         statusCode: 201,
         success: true,

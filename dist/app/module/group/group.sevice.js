@@ -66,8 +66,8 @@ const joinGroup = (userId, groupId, token) => __awaiter(void 0, void 0, void 0, 
     if (!group) {
         throw new AppError_1.default(404, "Group not found");
     }
-    if (group.type !== client_1.GroupType.ADMIN_CHAT && decoded.role !== "ADMIN") {
-        throw new AppError_1.default(400, "Invalid group type. Must be either GENERAL_CHAT or ADMIN_CHAT.");
+    if (group.type == client_1.GroupType.ADMIN_CHAT && decoded.role !== "ADMIN") {
+        throw new AppError_1.default(400, "You can not join the group");
     }
     const userGroup = yield prisma.userGroup.findFirst({
         where: {
@@ -108,8 +108,30 @@ const viewGroup = (groupId) => __awaiter(void 0, void 0, void 0, function* () {
     catch (er) {
     }
 });
+const viewAllGroups = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const groups = yield prisma.group.findMany({
+            include: {
+                userGroups: {
+                    include: {
+                        user: true,
+                    },
+                },
+            },
+        });
+        if (!groups || groups.length === 0) {
+            throw new Error('No groups found');
+        }
+        return groups;
+    }
+    catch (error) {
+        console.error('Error fetching groups:', error);
+        throw new Error('Failed to retrieve groups');
+    }
+});
 exports.groupService = {
     createGroup,
     joinGroup,
-    viewGroup
+    viewGroup,
+    viewAllGroups
 };

@@ -19,27 +19,31 @@ const config_1 = __importDefault(require("./app/config"));
 const client_1 = require("@prisma/client");
 const socket_io_1 = require("socket.io");
 const prisma = new client_1.PrismaClient();
-const server = new http_1.Server(app_1.default);
-const io = new socket_io_1.Server(server);
+const server = (0, http_1.createServer)(app_1.default);
+const io = new socket_io_1.Server(server, {
+    cors: {
+        origin: ["http://localhost:3000"],
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+});
 exports.io = io;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield prisma.$connect();
+            console.log('Connected to database');
             io.on('connection', (socket) => {
+                console.log(socket.id);
                 console.log('A user connected:', socket.id);
-                // Example: Listen for a custom event
-                socket.on('message', (data) => {
-                    console.log('Message received:', data);
-                    // Broadcast the message to all connected clients
-                    io.emit('message', data);
+                socket.on('sendMessage', (data) => {
+                    io.emit('receiveMessage', data);
                 });
-                // Handle disconnection
                 socket.on('disconnect', () => {
                     console.log('A user disconnected');
                 });
             });
-            app_1.default.listen(config_1.default.port, () => {
+            server.listen(config_1.default.port, () => {
                 console.log(`Example app listening on port ${config_1.default.port}`);
             });
         }

@@ -16,8 +16,11 @@ exports.userController = void 0;
 const SendResponse_1 = __importDefault(require("../../utils/SendResponse"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const user_service_1 = require("./user.service");
+const server_1 = require("../../../server");
 const signUpRegistration = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.userService.createUser(req);
+    const x = server_1.io.emit("signup", { success: true, message: "User registered successfully", data: result });
+    console.log(x);
     (0, SendResponse_1.default)(res, {
         statusCode: 201,
         success: true,

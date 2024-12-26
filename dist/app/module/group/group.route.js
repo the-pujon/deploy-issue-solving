@@ -14,4 +14,5 @@ router.post('/join-group/:userId/:groupId',
 // validateRequest(groupValidation.createGroupValidation),
 group_controller_1.groupController.joinGroup);
 router.get('/see-group/:groupId', group_controller_1.groupController.viewGroup);
+router.get('/see-group', group_controller_1.groupController.viewAllGroup);
 exports.groupRoute = router;

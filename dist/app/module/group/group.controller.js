@@ -54,8 +54,18 @@ const viewGroup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         data: result
     });
 }));
+const viewAllGroup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield group_sevice_1.groupService.viewAllGroups();
+    (0, SendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: 'All groups retrived Successfully',
+        data: result
+    });
+}));
 exports.groupController = {
     groupCreation,
     joinGroup,
-    viewGroup
+    viewGroup,
+    viewAllGroup
 };
