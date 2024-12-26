@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "prisma generate",
-    "start": "prisma generate && tsc",
+    "start": "prisma generate && tsc ",
     "start:dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
